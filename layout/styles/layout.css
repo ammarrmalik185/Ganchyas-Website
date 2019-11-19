@@ -261,8 +261,10 @@ td{border-width:0 1px;}
 
 /* Font Awesome Social Icons
 --------------------------------------------------------------------------------------------------------------- */
-.faico{margin:0; padding:0; list-style:none;}
-.faico li{display:inline-block; margin:8px 5px 0 0; padding:0; line-height:normal;}
+.faico{margin:0 0 0 0; padding:0; list-style:none;}
+.faico li{display:inline-block;
+	margin: 8px 5px 0 0;
+	padding: 0; line-height:normal;}
 .faico li:last-child{margin-right:0;}
 .faico a{display:inline-block; width:36px; height:36px; line-height:36px; font-size:18px; text-align:center;}
 
