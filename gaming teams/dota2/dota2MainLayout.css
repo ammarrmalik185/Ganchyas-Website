@@ -1,0 +1,88 @@
+
+@import url("font-awesome.min.css");
+body {
+    background-color: #000000;
+}
+
+.sectiontitle {
+
+    text-align: center;
+    color: crimson;
+    font-family: Arial, serif;
+    font-weight: bold;
+    display: inline-block;
+    margin: 10px 10px 10px 10px;
+}
+
+.sectionlist {
+    text-align: center;
+    color: white;
+    font-family: Arial, serif;
+    list-style: none;
+}
+
+.one-third {
+    background-image:url("images/section background.jpg");
+    display: inline-grid;
+    width: 30%;
+    margin: 0 15px 15px;
+    border: 2px solid red;
+    min-height: 300px;
+}
+
+.header{
+
+    /*background-image:url("images/background top.png");*/
+    /*width : 100%;*/
+    /*height : 700px;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: 100%;*/
+    margin: 0 0 0 0;
+    padding: 0 0 0 0 ;
+    text-align: center;
+}
+
+.header-image {
+    width : 100%;
+    height : 700px;
+    margin: 0 0 0 0;
+}
+
+.mainhead {
+    font-weight: bold;
+    font-family: "Bookman Old Style", serif;
+    font-size: 200px;
+    color: #ff0000;
+    margin-top: 0;
+    vertical-align: middle;
+    text-decoration: underline;
+}
+
+.home-button {
+    display: block;
+    horiz-align: right;
+    margin : 5px;
+    padding: 0;
+    height: 30px;
+    width : 50px;
+    text-align: center;
+
+}
+
+.home-button-wrapper {
+    text-align: center;
+}
+
+.home-button {
+    background-color: #000000;
+    color : white;
+    padding: 0;
+    border: 0;
+    margin : 0;
+}
+
+
+/*
+---------------------------------------------------------------
+*/
+
