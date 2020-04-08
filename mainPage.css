@@ -1,0 +1,313 @@
+@charset "utf-8";
+@import url("font.css");
+
+/** ---------------------------- MainPage Elements and Common Values ---------------------------- **/
+body{
+    padding: 0;
+    margin: 0;
+    color:#A8A7A6;
+    background-color:#0C0C0C;
+}
+
+.navigationBar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+
+}
+
+.navigationBar li {
+    float: left;
+}
+
+.navigationBar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navigationBar li a:hover {
+    cursor: pointer;
+    background-color: #111;
+}
+
+#leftNavigationBar{
+    display: inline-block;
+    height: 100%;
+    width: 9.9%;
+    align-items: start;
+}
+
+#fragmentContainer {
+    display: inline-block;
+    width: 80%;
+}
+
+#dialog {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+#content {
+    background-color: #313131;
+    margin: 8% auto;
+    padding: 20px;
+    border: 1px solid #888888;
+    height: fit-content;
+    width: 50%;
+
+}
+
+#inflateContent {
+    max-height: 280px;
+    min-height: 280px;
+    overflow: auto
+}
+
+#extraContentContainer{
+    margin-top : 5px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+#cancelButton {
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    background-color: #f44336;
+}
+
+/** Template **/
+.row0 *,.row0 *::before,.row0 *::after{transition:all .28s ease-in-out;}
+.row0 nav ul, .row0 nav ol{margin:0; padding:0; list-style:none;}
+.row0, .row0 a{color:#A8A7A6; background-color:#222222;}
+.row0 a:hover{color:#EA5616;}
+.row0 a{color:#EA5616;}
+.row0, .row0 a{
+    color:#A8A7A6;
+    background-color:#222222
+;}
+.row0 a:hover{
+    cursor: pointer;
+    color:#EA5616;
+}
+.row0 a:active,.row0 a:focus{background:transparent;}
+.row0 label span{color:#FF0000; background-color:inherit;}
+
+#TopHeader{
+    font-family: Verdana, Geneva, sans-serif;
+    line-height: 1.6em;
+    color: #A8A7A6;
+    transition: all .28s ease-in-out;
+    display: block;
+    clear: both;
+    padding: 15px 0;
+    font-size: .8rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+#TopHeader *{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+#TopHeader ul li{
+    display:inline-block;
+    margin-right:10px;
+    padding-right:15px;
+}
+#TopHeader ul li:last-child{
+    margin-right:0;
+    padding-right:0;
+    border-right:none;
+}
+#TopHeader i{
+    margin:0 5px 0 0;
+    line-height:normal;
+}
+#TopHeader a i{
+    margin-right:0;
+}
+#TopHeader .fa-home{
+}
+
+
+/** ---------------------------- Forum Fragment Elements ---------------------------- **/
+
+/** Forum List Elements **/
+.userListContainer,
+.commentsContainer,
+.forumList {
+    margin: 8px 0 0 0;
+    list-style-type: none;
+    padding: 0;
+    overflow: hidden;
+    background-color: #292d2d;
+}
+
+.userListContainer li,
+.commentsContainer li,
+.forumList  li  {
+    margin: 8px;
+    color: white;
+}
+
+.forumList  li{
+    margin: 20px;
+}
+
+.forumHeader img{
+    border-radius: 50%;
+    margin: 0;
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+}
+.forumHeader h1{
+    display: inline-block;
+    margin: 0;
+}
+.forumHeader p {
+    display: inline-block;
+    margin: 3px;
+    float: right;
+}
+
+.forumContent h3{
+    margin-bottom: 0;
+}
+
+.forumContent  p{
+    margin-top: 0;
+}
+
+.forumContent video{
+    width: 80%;
+    max-height: 600px;
+    margin-left: 10%;
+}
+
+.forumContent img{
+    width: 80%;
+    max-height: 600px;
+    margin-left: 10%;
+    object-fit: contain;
+}
+
+.forumContent div{
+    margin: 0 8%;
+    padding: 3%;
+    border-radius: 10%;
+    border: 2px solid black;
+}
+
+.forumContent div p{
+    display: inline-block;
+    margin: 0 1%;
+}
+
+.forumContent .downloadFileButton{
+    cursor: pointer;
+    float: right;
+}
+
+.forumContent div img{
+    width: 32px;
+    height: 32px;
+    margin : 0;
+}
+
+.forumFooter {
+    margin-top: 10px;
+}
+
+.forumFooter p{
+    cursor: pointer;
+    display: inline-block;
+    width: 32.97%;
+    text-align: center;
+    margin: 0;
+}
+.forumFooter button{
+    display: inline-block;
+    width: 32.97%;
+    text-align: center;
+    margin: 0;
+    border-radius: 20%;
+    height: 50px;
+    background-color: rgb(43, 43, 43);
+}
+
+.forumFooter .likeButton{
+    color: rgb(123, 255, 27);;
+}
+
+.forumFooter .disLikeButton{
+    color: rgb(255, 42, 42);
+}
+
+.forumFooter .commentButton{
+    color: rgb(47, 46, 255);;
+}
+
+/** Comment Elements **/
+.commentsContainer img{
+    border-radius: 50%;
+    margin: 0;
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+}
+
+.commentsContainer h2{
+    display: inline-block;
+    margin: 0;
+}
+
+.commentsContainer p{
+    margin: 0;
+}
+
+.commentsContainer .commentDate{
+    font-size: 10px;
+}
+
+.submitNewComment input{
+    width: 80%;
+}
+
+.submitNewComment button{
+    width: 18%;
+}
+
+/** User List Elements **/
+.userListContainer img{
+    border-radius: 50%;
+    margin: 0;
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+}
+
+.userListContainer h2{
+    display: inline-block;
+    margin: 0;
+}
+
+
