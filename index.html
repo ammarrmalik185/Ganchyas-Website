@@ -12,9 +12,13 @@
         <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-database.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-storage.js"></script>
         <script src="index.js"></script>
 
+        <div id="snackbar"></div>
+
         <div id = "dialog">
+
             <div id = "loginForum">
                 <h1>Login</h1>
 
@@ -25,15 +29,112 @@
                 <input type="password" placeholder="Enter Password" id="passwordField">
 
                 <button onclick="login()" type="submit">Login</button>
-                <button onclick="closeLoginDialog()" type="submit" class="cancelButton">Cancel</button>
+                <button onclick="closeLoginDialog()" class="cancelButton">Cancel</button>
+            </div>
+        </div>
+
+        <div id = "addDataDialog">
+            <div id = "addDataDialogContent">
+
+                <h1>Before going to the Community, you need to enter some information about yourself</h1>
+
+                <label for="nameField"><b>Name</b></label>
+                <input type="text" placeholder="Enter Name" id="nameField">
+
+                <label for="phoneNoField"><b>Phone Number</b></label>
+                <input type="text" placeholder="Enter Phone Number" id="phoneNoField">
+
+                <label for="dobField"><b>Date of Birth</b></label>
+                <input type="text" placeholder="Enter Date" id="dobField">
+
+                <label for="sectionField"><b>Section</b></label>
+                <input type="text" placeholder="Enter Section (e.g BSE-2A)" id="sectionField">
+
+                <button onclick="addUserData()" type="submit">Add Data and continue</button>
+                <button onclick="addUserDataDialogClose()" class="cancelButton">Cancel</button>
+
+            </div>
+        </div>
+
+        <div id="profileViewDialog">
+            <div id = "profileViewDialogContent">
+                <img src="images/default%20pp-01.svg" alt = "profilePicture" title="Change Profile Picture"
+                     id="profileViewPicture" onclick="changeProfilePicture()">
+                <div id = "profilePictureChangeConfirmation">
+                    <button class="btn" onclick="confirmChangeProfilePicture()">Confirm</button>
+                    <button class="cancelButton" onclick="cancelChangeProfilePicture()">Cancel</button>
+                </div>
+                <h1 id = "profileViewName">Loading</h1>
+                <p id = "profileViewPhoneNo">Loading</p>
+                <p id = "profileViewDob">Loading</p>
+                <p id = "profileViewSection">Loading</p>
+                <button class="btn" onclick="changeDataDialogOpen()">Change Data</button>
+                <button class="btn" onclick="changePasswordDialogOpen()">Change Password</button>
+                <button class="cancelButton" onclick="userDataDialogClose()">BACK</button>
+                <button onclick="logOut()" class="cancelButton">LOGOUT</button>
+            </div>
+        </div>
+
+        <div id = "editDataDialog">
+            <div id = "editDataDialogContent">
+
+                <h1>Edit Data</h1>
+
+                <label for="nameFieldEdit"><b>Name</b></label>
+                <input type="text" placeholder="Enter Name" id="nameFieldEdit">
+
+                <label for="phoneNoFieldEdit"><b>Phone Number</b></label>
+                <input type="text" placeholder="Enter Phone Number" id="phoneNoFieldEdit">
+
+                <label for="dobFieldEdit"><b>Date of Birth</b></label>
+                <input type="text" placeholder="Enter Date" id="dobFieldEdit">
+
+                <label for="sectionFieldEdit"><b>Section</b></label>
+                <input type="text" placeholder="Enter Section (e.g BSE-2A)" id="sectionFieldEdit">
+
+                <button onclick="editUserData()" type="submit">Change Data</button>
+                <button onclick="changeDataDialogClose()" class="cancelButton">Cancel</button>
+
+            </div>
+        </div>
+
+        <div id = "changePasswordDialog">
+            <div id = "changePasswordDialogContent">
+
+                <h1>Change Password</h1>
+
+                <label for="oldPasswordField"><b>Old Password</b></label>
+                <input type="password" placeholder="Old Password" id="oldPasswordField">
+
+                <label for="newPasswordField1"><b>New Password</b></label>
+                <input type="password" placeholder="New Password" id="newPasswordField1">
+
+                <label for="newPasswordField2"><b>Retype New Password</b></label>
+                <input type="password" placeholder="Retype New Password" id="newPasswordField2">
+
+                <button onclick="changePassword()" type="submit">Change Password</button>
+                <button onclick="changePasswordDialogClose()" class="cancelButton">Cancel</button>
+
+
+            </div>
+        </div>
+
+        <div id = "progressBarDialog">
+            <div id="progressBarDialogContent">
+                <h3>Uploading Image</h3>
+                <div id="progressBarContainer">
+                    <div id="progressBar">
+                    </div>
+                </div>
+                <p id= "progressValue">0%</p>
             </div>
         </div>
 
         <div class="wrapper row0">
+            <div id="currentUser">Wait</div>
             <div id="TopHeader" class="hoc clear">
                 <ul>
-                    <li><a href="#"><i class="fa fa-lg fa-home"></i></a></li>
-                    <li><a id="loginButton">Please wait</a></li>
+                    <li><a href="#"><i class="fa fa-lg fa-home"> Home</i></a></li>
                 </ul>
             </div>
         </div>
@@ -45,7 +146,7 @@
                     <img src="images/logo.png" alt="Logo">
                     <h1><a href="index.html">Ganchyas</a></h1>
                 </div>
-                <div class="fl_right"><a id="navigateToCommunity" class="btn" href="#">dont click me im useless .. like you</a></div>
+                <div class="fl_right"><a id="navigateToCommunity" class="btn" href="#">Please wait</a></div>
 
             </header>
         </div>
@@ -54,52 +155,42 @@
 
             <div class="wrapper row2">
                 <nav id="topNavigationBar" class="hoc clear">
-                    <ul class="clear">
-                        <li class="active"><a href="index.html">Home</a></li>
-                        <li><a class="drop" href="#">Gaming Teams</a>
-                            <ul>
-                                <li><a href="gaming%20teams/dota2/dota2Main.html">Dota 2</a></li>
-                                <li><a href="gaming%20teams/minecraft/minecraftMain.html">Minecraft</a></li>
-                                <li><a href="gaming%20teams/cod4/cod4Main.html">Call of Duty 4</a></li>
-                                <li><a href="gaming%20teams/csgo/csgoMain.html">Counter Strike : Global Offence</a></li>
-                            </ul>
-                        </li>
-                        <li><a class="drop" href="#">Committees</a>
-                            <ul>
-                                <li><a href="#">Fact Committee</a></li>
-                                <li><a href="#">Sick Fuck Committee</a></li>
-                                <li><a href="#">Juggat Committee</a></li>
-                            </ul>
-                        </li>
-                        <li><a class="drop" href="#">Software</a>
-                            <ul>
-                                <li><a href="#">Arms Management System</a></li>
-                                <li><a href="#">Minecraft Helper</a></li>
-                                <li><a href="#">Whatsapp Bot</a></li>
-                                <li><a href="#">Dota2 Calculator</a></li>
-                            </ul>
+<!--                    <ul class="clear">-->
+<!--                        <li><a class="drop" href="#">Gaming Teams</a>-->
+<!--                            <ul>-->
+<!--                                <li><a href="gaming%20teams/dota2/dota2Main.html">Dota 2</a></li>-->
+<!--                                <li><a href="gaming%20teams/minecraft/minecraftMain.html">Minecraft</a></li>-->
+<!--                                <li><a href="gaming%20teams/cod4/cod4Main.html">Call of Duty 4</a></li>-->
+<!--                                <li><a href="gaming%20teams/csgo/csgoMain.html">Counter Strike : Global Offence</a></li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                        <li><a class="drop" href="#">Committees</a>-->
+<!--                            <ul>-->
+<!--                                <li><a href="#">Fact Committee</a></li>-->
+<!--                                <li><a href="#">Sick Fuck Committee</a></li>-->
+<!--                                <li><a href="#">Juggat Committee</a></li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                        <li><a class="drop" href="#">Software</a>-->
+<!--                            <ul>-->
+<!--                                <li><a href="#">Arms Management System</a></li>-->
+<!--                                <li><a href="#">Minecraft Helper</a></li>-->
+<!--                                <li><a href="#">Whatsapp Bot</a></li>-->
+<!--                                <li><a href="#">Dota2 Calculator</a></li>-->
+<!--                            </ul>-->
 
-                        <li><a class="drop" href="#">Members</a>
-                            <ul>
-                                <li><a class="drop" href="#">The Originals</a>
-                                    <ul>
-                                        <li><a href="#">Ammar Rashid Malik</a></li>
-                                        <li><a href="#">Anas Ahmed</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">The Honorary</a></li>
-                            </ul>
-                        </li>
-
-                        <li><a class="drop" href="#">Plans</a>
-                            <ul>
-                                <li><a href="#">Trips</a></li>
-                                <li><a href="#">Get together</a></li>
-                                <li><a href="#">Ganchya scene</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#">Social Media</a></li>
-                    </ul>
+<!--                        <li><a class="drop" href="#">Members</a>-->
+<!--                            <ul>-->
+<!--                                <li><a class="drop" href="#">The Originals</a>-->
+<!--                                    <ul>-->
+<!--                                        <li><a href="#">Ammar Rashid Malik</a></li>-->
+<!--                                        <li><a href="#">Anas Ahmed</a></li>-->
+<!--                                    </ul>-->
+<!--                                </li>-->
+<!--                                <li><a href="#">The Honorary</a></li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                    </ul>-->
 
                 </nav>
             </div>

@@ -1,26 +1,32 @@
+let fileToUpload;
+let fileType;
+
 function goToForumFragment() {
     let fragmentContainer = document.getElementById("fragmentContainer");
     fragmentContainer.innerText = "";
+    fragmentContainer.appendChild(inflateAddNewForum());
+
     let forumsList = document.createElement("UL");
     forumsList.className = "forumList";
+    fragmentContainer.appendChild(forumsList);
+
     let database = firebase.database();
     database.ref().once('value').then (function(snapshot) {
         let forumsSnap = snapshot.child("forumData");
         forumsSnap.forEach(function(childSnapshot) {
-            forumsList.appendChild(getForumView(childSnapshot, snapshot.val()["userdata"]))
+            forumsList.appendChild(getForumView(childSnapshot, snapshot.val()["userdata"],snapshot))
         });
-        fragmentContainer.appendChild(forumsList);
     });
 }
 
-function getForumView(forumSnap, usersSnap) {
+function getForumView(forumSnap, usersSnap, completeSnapshot) {
 
     let listNode = document.createElement("LI");
     listNode.id = forumSnap.key;
     let divider = document.createElement("hr");
     divider.className = "divider";
 
-    listNode.appendChild(inflateHeader(forumSnap, usersSnap));
+    listNode.appendChild(inflateHeader(forumSnap, usersSnap, completeSnapshot));
     listNode.appendChild(inflateContent(forumSnap));
     listNode.appendChild(inflateFooter(forumSnap, usersSnap));
     listNode.appendChild(divider);
@@ -28,7 +34,7 @@ function getForumView(forumSnap, usersSnap) {
     return listNode;
 }
 
-function inflateHeader(forumSnap, usersSnap){
+function inflateHeader(forumSnap, usersSnap, completeSnapshot){
     let forumSnapValue = forumSnap.val();
     let senderSnap = usersSnap[forumSnapValue["sender"]];
     let headerNode = document.createElement("div");
@@ -37,6 +43,9 @@ function inflateHeader(forumSnap, usersSnap){
     let profilePicNode = document.createElement("img");
     if (senderSnap["profile picture"]){
         profilePicNode.src = senderSnap["profile picture"]
+    }
+    else{
+        profilePicNode.src = completeSnapshot.child("defaults").child("profile picture").val();
     }
 
     let senderNameNode = document.createElement("H1");
@@ -373,9 +382,9 @@ function commentPressed(forumSnap){
             commentsRef.forEach(function(childSnapshot) {
                 let check = document.getElementById(childSnapshot.key);
                 if (check) {
-                    commentsList.appendChild(getCommentView(childSnapshot, usersRef));
+                    commentsList.appendChild(getCommentView(childSnapshot, usersRef, snapshot));
                 }else{
-                    commentsList.insertBefore(getCommentView(childSnapshot, usersRef), commentsList.firstChild)
+                    commentsList.insertBefore(getCommentView(childSnapshot, usersRef, snapshot), commentsList.firstChild)
                 }
             });
         }
@@ -410,7 +419,7 @@ function postComment(forumSnap, text) {
     }
 }
 
-function getCommentView(commentSnap, usersRef) {
+function getCommentView(commentSnap, usersRef, completeSnapshot) {
 
     let commentValue = commentSnap.val();
     let senderSnap = usersRef[commentValue["sender"]];
@@ -422,6 +431,9 @@ function getCommentView(commentSnap, usersRef) {
     profilePicNode.height = 50;
     if (senderSnap["profile picture"]){
         profilePicNode.src = senderSnap["profile picture"]
+    }
+    else{
+        profilePicNode.src = completeSnapshot.child("defaults").child("profile picture").val();
     }
 
     let header = document.createElement("H2");
@@ -460,4 +472,258 @@ function updateListEntity(forumSnap){
             return forumsSnapUpdated;
         });
     }
+}
+
+function inflateAddNewForum(){
+
+    let addNewForumContainer = document.createElement("div");
+    addNewForumContainer.id = "addNewForumContainer";
+    let header = document.createElement("h3");
+    header.innerText = "Add New Forum";
+
+    let subjectField = document.createElement("textarea");
+    subjectField.placeholder = "Enter Subject";
+    subjectField.id = "newForumSubject";
+
+    let textField = document.createElement("textarea");
+    textField.placeholder = "Enter Text";
+    textField.id = "newForumText";
+
+    let fileInputContainer = document.createElement("div");
+    fileInputContainer.id = "fileInputContainer";
+
+    let attachImageContainer = document.createElement("div");
+    attachImageContainer.className = "roundIconContainer";
+    attachImageContainer.addEventListener("click", selectFileImage);
+    function selectFileImage(){
+        if (fileToUpload){
+            if (fileType === "image"){
+                fileToUpload = undefined;
+                fileType = undefined;
+                attachImageContainer.style["background"] = "#636363";
+            }
+            else{
+                selectFile("image", attachImageContainer);
+            }
+        }
+        else{
+            selectFile("image", attachImageContainer);
+        }
+    }
+    let attachImage = document.createElement("img");
+    attachImage.src = "images/photo.svg";
+    attachImageContainer.appendChild(attachImage);
+
+    let attachVideoContainer = document.createElement("div");
+    attachVideoContainer.className = "roundIconContainer";
+    attachVideoContainer.title = "Add Video";
+    attachVideoContainer.addEventListener("click", selectFileVideo);
+    function selectFileVideo(){
+        if (fileToUpload){
+            if (fileType === "video"){
+                fileToUpload = undefined;
+                fileType = undefined;
+                attachVideoContainer.style["background"] = "#636363";
+            }
+            else{
+                selectFile("video", attachVideoContainer);
+            }
+        }
+        else{
+            selectFile("video", attachVideoContainer);
+        }
+
+    }
+    let attachVideo = document.createElement("img");
+    attachVideo.src = "images/video.svg";
+    attachVideoContainer.appendChild(attachVideo);
+
+    let attachFileContainer = document.createElement("div");
+    attachFileContainer.className = "roundIconContainer";
+    attachFileContainer.addEventListener("click", selectFileAny);
+    function selectFileAny(){
+        if (fileToUpload){
+            if (fileType === "*"){
+                fileToUpload = undefined;
+                fileType = undefined;
+                attachFileContainer.style["background"] = "#636363";
+            }
+            else{
+                selectFile("*", attachFileContainer);
+            }
+        }
+        else{
+            selectFile("*", attachFileContainer);
+        }
+    }
+    let attachFile = document.createElement("img");
+    attachFile.src = "images/file.svg";
+    attachFileContainer.appendChild(attachFile);
+
+    fileInputContainer.appendChild(attachImageContainer);
+    fileInputContainer.appendChild(attachVideoContainer);
+    fileInputContainer.appendChild(attachFileContainer);
+
+    let submitButton = document.createElement("button");
+    submitButton.innerText = "Submit";
+    submitButton.className = "submitButton";
+    submitButton.addEventListener("click", submitForum);
+
+    addNewForumContainer.appendChild(header);
+    addNewForumContainer.appendChild(subjectField);
+    addNewForumContainer.appendChild(textField);
+    addNewForumContainer.appendChild(fileInputContainer);
+    addNewForumContainer.appendChild(submitButton);
+
+    return addNewForumContainer;
+
+}
+
+function selectFile(type, feedbackContainer){
+
+    let mimeType = type + "/*";
+    let dudInput = document.createElement("input");
+    dudInput.type = "file";
+    dudInput.accept = mimeType;
+    dudInput.addEventListener("change", fileSelected);
+    function fileSelected(fileFakePath){
+        let file = fileFakePath.target.files[0];
+        console.log(file);
+        fileToUpload = file;
+        fileType = type;
+        let containers = document.getElementsByClassName("roundIconContainer");
+        let singleContainer;
+        for (singleContainer of containers){
+            singleContainer.style["background"] = "#636363"
+        }
+        feedbackContainer.style["background"] = "#0bc500";
+    }
+    dudInput.click();
+}
+
+function submitForum() {
+
+    let subjectText = document.getElementById("newForumSubject").value;
+    let mainText = document.getElementById("newForumText").value;
+
+    let d = new Date();
+    let ss = d.getSeconds().toString().padStart(2, '0');
+    let mm = d.getMinutes().toString().padStart(2, '0');
+    let HH = d.getHours().toString().padStart(2, '0');
+    let dd = d.getDate().toString().padStart(2, '0');
+    let MM = String(d.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = d.getFullYear();
+    let timeConstant = yyyy + MM + dd + HH + mm + ss;
+    let identifier = "forum_id_" + (50000000000000 - parseInt(timeConstant)).toString();
+
+    let data = {
+        "subject" : subjectText,
+        "mainText" : mainText,
+        "sender" : currentUserId,
+        "date" :  dd + '/' + MM + '/' + yyyy
+    };
+
+    if (fileToUpload){
+
+        let completeStorageRef = firebase.storage().ref();
+        let fileUploadPath;
+        let fileUploadExtension = "." + fileToUpload.name.split('.').pop();
+        if (fileType === "image"){
+            console.log("|" + fileToUpload.type.replace("image/", "") + "|");
+            fileUploadPath = completeStorageRef.child("forum images/" + identifier + fileUploadExtension);
+        }
+        else if (fileType === "video"){
+            fileUploadPath = completeStorageRef.child("forum videos/" + identifier + fileUploadExtension);
+            data["type"] = "video"
+        }
+        else if (fileType === "*"){
+            console.log(fileToUpload.name.split('.').pop());
+            fileUploadPath = completeStorageRef.child("forum files/" + identifier + "/" + fileToUpload.name);
+            data["type"] = "file"
+        }
+
+        console.log(data);
+
+        let dialog = document.getElementById("dialog");
+        let dialogHtmlCode = dialog.innerHTML;
+        inflateProgressDialog(dialog);
+
+        let progressBar = document.getElementById("progressBar");
+        let progressValue = document.getElementById("progressValue");
+
+        let fileUploadTask = fileUploadPath.put(fileToUpload);
+        fileUploadTask.on('state_changed', function(snapshot){
+            let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            progress = Math.round(progress);
+            let progressStyleString = progress.toString() + "%";
+            progressBar.style["width"] = progressStyleString;
+            progressValue.innerText = progressStyleString;
+        }, function(error) {
+            console.log(error);
+            showSnackbarAlert(error);
+            dialog.style["display"] = "none";
+            dialog.innerHTML = dialogHtmlCode;
+        }, function() {
+            fileUploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                dialog.style["display"] = "none";
+                dialog.innerHTML = dialogHtmlCode;
+                data["fileUri"] = downloadURL;
+                firebase.database().ref().child("forumData").child(identifier).set(data);
+                goToForumFragment();
+            });
+        });
+
+    }
+    else{
+        if ((data.subject + data.mainText).trim() !== "") {
+            firebase.database().ref().child("forumData").child(identifier).set(data);
+            goToForumFragment();
+        }
+        else{
+            showSnackbarAlert("The forum needs to have a file\n attached or have some text");
+        }
+    }
+
+}
+
+function inflateProgressDialog(dialog) {
+    let dialogContent = document.getElementById("content");
+    dialogContent.innerText = "";
+
+    let contentContainer = document.createElement("div");
+    contentContainer.id = "progressDialogContentContainer";
+
+    let header = document.createElement("h2");
+    header.innerText = "Uploading File";
+
+    let progressBarContainer = document.createElement("div");
+    progressBarContainer.id = "progressBarContainer";
+
+    let progressBar = document.createElement("div");
+    progressBar.id = "progressBar";
+
+    progressBarContainer.appendChild(progressBar);
+
+    let progressValue = document.createElement("p");
+    progressValue.innerText = "0%";
+    progressValue.id = "progressValue";
+
+    dialogContent.appendChild(contentContainer);
+    contentContainer.appendChild(header);
+    contentContainer.appendChild(progressBarContainer);
+    contentContainer.appendChild(progressValue);
+
+    dialog.style["display"] = "block";
+
+}
+
+function showSnackbarAlert(message){
+    let snackBar = document.getElementById("snackbar");
+    snackBar.innerText = message;
+    snackBar.className = "show";
+
+    setTimeout(function(){
+            snackBar.className = snackBar.className.replace("show", "");
+        }, 3000
+    );
 }

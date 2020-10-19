@@ -8,12 +8,16 @@
     </head>
     <body>
 
-
-    <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.13.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-auth.js"></script>
+<!--    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-messaging.js"></script>-->
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-storage.js"></script>
     <script src="mainPage.js" type="text/javascript"></script>
     <script src="mainPageFragments/forumFragment.js" type="text/javascript"></script>
+    <script src="mainPageFragments/messagingFragment.js" type="text/javascript"></script>
+
+    <div id="snackbar"></div>
 
     <div id = "dialog">
         <div id = "content">
@@ -23,15 +27,112 @@
         </div>
     </div>
 
-    <div class="wrapper row0">
-        <div id="TopHeader" class="hoc clear">
-            <ul>
-                <li><a href="index.html"><i class="fa fa-lg fa-home"></i></a></li>
-                <li><a id="loginButton" onclick="logOut()">Logout</a></li>
-            </ul>
+    <div id = "addDataDialog">
+        <div id = "addDataDialogContent">
+
+            <h1>Before using Community, you need to enter some information about yourself</h1>
+
+            <label for="nameField"><b>Name</b></label>
+            <input type="text" placeholder="Enter Name" id="nameField">
+
+            <label for="phoneNoField"><b>Phone Number</b></label>
+            <input type="text" placeholder="Enter Phone Number" id="phoneNoField">
+
+            <label for="dobField"><b>Date of Birth</b></label>
+            <input type="date" placeholder="Enter Date" id="dobField">
+
+            <label for="sectionField"><b>Section</b></label>
+            <input type="text" placeholder="Enter Section (e.g BSE-2A)" id="sectionField">
+
+            <button onclick="addUserData()" type="submit">Add Data and continue</button>
+
         </div>
     </div>
 
+    <div id="profileViewDialog">
+        <div id = "profileViewDialogContent">
+            <img src="images/default%20pp-01.svg" alt = "profilePicture" title="Change Profile Picture"
+                 id="profileViewPicture" onclick="changeProfilePicture()">
+            <div id = "profilePictureChangeConfirmation">
+                <button class="btn" onclick="confirmChangeProfilePicture()">Confirm</button>
+                <button class="cancelButton" onclick="cancelChangeProfilePicture()">Cancel</button>
+            </div>
+            <h1 id = "profileViewName">Loading</h1>
+            <p id = "profileViewPhoneNo">Loading</p>
+            <p id = "profileViewDob">Loading</p>
+            <p id = "profileViewSection">Loading</p>
+            <button class="btn" onclick="changeDataDialogOpen()">Change Data</button>
+            <button class="btn" onclick="changePasswordDialogOpen()">Change Password</button>
+            <button class="cancelButton" onclick="userDataDialogClose()">BACK</button>
+            <button onclick="logOut()" class="cancelButton">LOGOUT</button>
+        </div>
+    </div>
+
+    <div id = "editDataDialog">
+        <div id = "editDataDialogContent">
+
+            <h1>Edit Data</h1>
+
+            <label for="nameFieldEdit"><b>Name</b></label>
+            <input type="text" placeholder="Enter Name" id="nameFieldEdit">
+
+            <label for="phoneNoFieldEdit"><b>Phone Number</b></label>
+            <input type="text" placeholder="Enter Phone Number" id="phoneNoFieldEdit">
+
+            <label for="dobFieldEdit"><b>Date of Birth</b></label>
+            <input type="text" placeholder="Enter Date" id="dobFieldEdit">
+
+            <label for="sectionFieldEdit"><b>Section</b></label>
+            <input type="text" placeholder="Enter Section (e.g BSE-2A)" id="sectionFieldEdit">
+
+            <button onclick="editUserData()" type="submit">Change Data</button>
+            <button onclick="changeDataDialogClose()" class="cancelButton">Cancel</button>
+
+        </div>
+    </div>
+
+    <div id = "changePasswordDialog">
+        <div id = "changePasswordDialogContent">
+
+            <h1>Change Password</h1>
+
+            <label for="oldPasswordField"><b>Old Password</b></label>
+            <input type="password" placeholder="Old Password" id="oldPasswordField">
+
+            <label for="newPasswordField1"><b>New Password</b></label>
+            <input type="password" placeholder="New Password" id="newPasswordField1">
+
+            <label for="newPasswordField2"><b>Retype New Password</b></label>
+            <input type="password" placeholder="Retype New Password" id="newPasswordField2">
+
+            <button onclick="changePassword()" type="submit">Change Password</button>
+            <button onclick="changePasswordDialogClose()" class="cancelButton">Cancel</button>
+
+
+        </div>
+    </div>
+
+    <div id = "progressBarDialog">
+        <div id="progressBarDialogContent">
+            <h3>Uploading Image</h3>
+            <div id="progressBarContainer">
+                <div id="progressBar">
+                </div>
+            </div>
+            <p id= "progressValue">0%</p>
+        </div>
+    </div>
+
+    <button onclick="scrollToTop()" id="scrollToTopButton" title="Go to top">^</button>
+
+    <div class="wrapper row0">
+        <div id="currentUser">Wait</div>
+        <div id="TopHeader" class="hoc clear">
+            <ul>
+                <li><a href="index.html"><i class="fa fa-lg fa-home"> Home</i></a></li>
+            </ul>
+        </div>
+    </div>
     <div class = "navigationBar">
             <ul>
                 <li><a onclick="goToForumFragment()">Forums</a></li>
